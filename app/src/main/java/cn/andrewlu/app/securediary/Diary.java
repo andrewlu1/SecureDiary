@@ -26,7 +26,7 @@ public class Diary implements Serializable {
 
     private String clearText;//纯文字内容,不包含图片信息.
 
-
+    //test.
     public int getId() {
         return id;
     }
