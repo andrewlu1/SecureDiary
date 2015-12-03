@@ -94,7 +94,7 @@ public class PatternLockView extends SurfaceView implements SurfaceHolder.Callba
                     //接收外界传过来的对错结果.
                     isCorrect = mUnlockListener.onUnlock(password);
                     //当密码正确时,立即清除mPoints,不再让界面画线了.否则就计时2s后再清除.
-                    if(isCorrect){
+                    if (isCorrect) {
                         mPoints.clear();
                     }
                 }
@@ -163,13 +163,13 @@ public class PatternLockView extends SurfaceView implements SurfaceHolder.Callba
         public WorkThread() {
             //设置画笔的绘制效果为描边的空心图形.还有其他几种.FILL:填充. FILL_AND_STROKE:填充并描边.
             mCirclePaint.setStyle(Paint.Style.STROKE);
-            mCirclePaint.setStrokeWidth(5);//设置描边的线宽.
+            mCirclePaint.setStrokeWidth(2);//设置描边的线宽.
             mCirclePaint.setColor(COLOR_NORMAL);//设置图形的颜色为半透明的蓝色调.黑色太丑了.
             //边缘还不够圆滑.设置一个细小的阴影效果.阴影带有渐变效果,会模糊掉尖锐的边缘.看起来就更加圆滑.
             mCirclePaint.setShadowLayer(1, 0, 0, COLOR_NORMAL);
 
             mFillPaint.setStyle(Paint.Style.FILL);
-            mFillPaint.setStrokeWidth(5);//当设置样式为填充时,此值表示线条的宽度.
+            mFillPaint.setStrokeWidth(4);//当设置样式为填充时,此值表示线条的宽度.
             mFillPaint.setColor(COLOR_NORMAL);
         }
 
@@ -243,12 +243,12 @@ public class PatternLockView extends SurfaceView implements SurfaceHolder.Callba
                         if (isCorrect) {
                             mCirclePaint.setColor(COLOR_NORMAL);
                             mFillPaint.setColor(COLOR_NORMAL);
-                            correctTimer =0;
+                            correctTimer = 0;
                         } else {
                             mCirclePaint.setColor(COLOR_ERROR);
                             mFillPaint.setColor(COLOR_ERROR);
                             correctTimer++;//当错误时,timer负责计时.
-                            if(correctTimer>=30){
+                            if (correctTimer >= 30) {
                                 //计时过了60帧了.即2秒钟了.
                                 isCorrect = true;
                                 correctTimer = 0;
@@ -300,10 +300,12 @@ public class PatternLockView extends SurfaceView implements SurfaceHolder.Callba
                             PointF prevPoint = null, currPoint = null;
                             //需要得到每个圆圈的圆心坐标.如何得到.mPoints中存储的是某个点的归一值.
                             // 需要通过建立映射关系来查找实际的圆心坐标.使用Map来存储.
+                            mCirclePaint.setStrokeWidth(4);
                             for (Integer p : mPoints) {
                                 //通过归一值来查找点的实际坐标对象.
                                 currPoint = mCirclePointMap2.get(p);
-                                canvas.drawCircle(currPoint.x, currPoint.y, 8, mFillPaint);
+                                canvas.drawCircle(currPoint.x, currPoint.y, 16, mFillPaint);
+                                canvas.drawCircle(currPoint.x, currPoint.y, width_14, mCirclePaint);
 
                                 //将每两个点进行连线.需要知道上一个点和当前点.
                                 if (prevPoint != null) {//如果上一个点坐标是空的,说明是第一个点.
@@ -327,10 +329,10 @@ public class PatternLockView extends SurfaceView implements SurfaceHolder.Callba
                                 prevPoint = currPoint;
 
                             }
-
+                            mCirclePaint.setStrokeWidth(2);
                             //应该在for循环外边画这最后一条线.
                             //绘制最后一个经过的圆心到手指间的连线.
-                            if(mCurrentFingerPoint!= null) {
+                            if (mCurrentFingerPoint != null) {
                                 canvas.drawLine(currPoint.x, currPoint.y, mCurrentFingerPoint.x, mCurrentFingerPoint.y, mFillPaint);
                             }
                         }
